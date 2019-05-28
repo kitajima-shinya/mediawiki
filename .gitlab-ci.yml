@@ -1,0 +1,56 @@
+# https://blog.callr.tech/building-docker-images-with-gitlab-ci-best-practices/
+image: docker:18.09.6
+
+services:
+  - name: docker:dind
+    command: ["--insecure-registry=stratus159.stratus.flab.fujitsu.co.jp:9000"]
+
+variables:
+  IMAGE_TAG: $CI_REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_SHORT_SHA
+  IMAGE_RELEASE_TAG: $CI_REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_REF_NAME
+  IMAGE_LATEST_TAG: $CI_REGISTRY/$CI_PROJECT_PATH:latest
+  DOCKER_HOST: tcp://localhost:2375
+  DOCKER_DRIVER: overlay2
+  HTTP_PROXY: $http_proxy
+  HTTPS_PROXY: $https_proxy
+
+before_script:
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+
+stages:
+  - build
+  - push
+
+#test:
+#  script:
+#    - export
+    
+build:
+  stage: build
+  script:
+    - docker pull $IMAGE_LATEST_TAG || true
+    - docker build -t $IMAGE_TAG --build-arg http_proxy=$HTTP_PROXY
+                                 --build-arg https_proxy=$HTTPS_PROXY .
+    - docker push $IMAGE_TAG
+
+push-latest:
+  variables:
+    GIT_STRATEGY: none
+  stage: push
+  only:
+    - master
+  script:
+    - docker pull $IMAGE_TAG
+    - docker tag $IMAGE_TAG $IMAGE_LATEST_TAG
+    - docker push $IMAGE_LATEST_TAG
+
+push-tag:
+  variables:
+    GIT_STRATEGY: none
+  stage: push
+  only:
+    - tags
+  script:
+    - docker pull $IMAGE_TAG
+    - docker tag $IMAGE_TAG $IMAGE_RELEASE_TAG
+    - docker push $IMAGE_RELEASE_TAG
