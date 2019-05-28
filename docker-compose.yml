@@ -1,0 +1,27 @@
+version: '3'
+services:
+  mediawiki:
+    image: stratus159.stratus.flab.fujitsu.co.jp:9000/kitajima/mediawiki:1.0.0
+    container_name: wiki
+    restart: always
+    ports:
+      - 80:80
+    links:
+      - database
+    volumes:
+      - /mnt/data/mediawiki/images:/var/www/wiki/images:Z
+      - /mnt/data/mediawiki/LocalSettings.php:/var/www/wiki/LocalSettings.php
+      - /mnt/data/mediawiki/Penguins.png:/var/www/wiki/resources/assets/wiki.png:ro
+    privileged: true
+    command: /sbin/init
+  database:
+    image: mariadb:10.4.5
+    container_name: wiki-db
+    restart: always
+    environment:
+      MYSQL_DATABASE: wiki
+      MYSQL_USER: wikiuser
+      MYSQL_PASSWORD: wikiuser
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+    volumes:
+      - /mnt/data/mediawiki/dbdata:/var/lib/mysql:Z
