@@ -22,10 +22,29 @@
 # docker push stratus159.stratus.flab.fujitsu.co.jp:9000/kitajima/mediawiki:1.0.0
 ```
 
-## デプロイ 
+## 起動
+### 初回起動時
+
+docker-compose.ymlの以下の行をコメントアウトしておくこと
+
+```
+      - /mnt/data/mediawiki/LocalSettings.php:/var/www/wiki/LocalSettings.php
+```
+
 
 ```
 # git clone http://stratus159.stratus.flab.fujitsu.co.jp:10080/kitajima/mediawiki.git
+# cd mediawiki
+# docker-compose up -d
+```
+
+上記で立ち上げた後，`http://xxxx/wiki`にアクセスし，初期設定を行ってダウンロードしたLocalSettings.phpを`/mnt/data/mediawiki/LocalSettings.php`に格納する
+
+その後，docker-compose.ymlのコメントアウトを解除し，以下の起動手順を実行する
+
+### 2回目移行の起動時
+
+```
 # cd mediawiki
 # docker-compose up -d
 ```
@@ -35,6 +54,17 @@
 ```
 # docker-compose down
 ```
+
+## アップグレード
+
+起動後に`http://xxxx/wiki/mw-config/`にアクセスし，
+
+```
+# cat LocalSettings.php | grep wgUpgradeKey
+$wgUpgradeKey = "****";
+```
+
+の値を入れてDBをアップグレードする
 
 ## バックアップ
 
