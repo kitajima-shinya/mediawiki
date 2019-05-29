@@ -32,6 +32,8 @@ build:
     - docker build -t $IMAGE_TAG --build-arg http_proxy=$HTTP_PROXY
                                  --build-arg https_proxy=$HTTPS_PROXY .
     - docker push $IMAGE_TAG
+  except:
+    - tags
 
 push-latest:
   variables:
@@ -40,6 +42,7 @@ push-latest:
   only:
     - master
   script:
+    - sleep 5
     - docker pull $IMAGE_TAG
     - docker tag $IMAGE_TAG $IMAGE_LATEST_TAG
     - docker push $IMAGE_LATEST_TAG
