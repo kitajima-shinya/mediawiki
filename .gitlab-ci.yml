@@ -42,6 +42,7 @@ push-latest:
   only:
     - master
   script:
+    - sleep 5
     - docker pull $IMAGE_TAG
     - docker tag $IMAGE_TAG $IMAGE_LATEST_TAG
     - docker push $IMAGE_LATEST_TAG
