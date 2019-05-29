@@ -32,6 +32,8 @@ build:
     - docker build -t $IMAGE_TAG --build-arg http_proxy=$HTTP_PROXY
                                  --build-arg https_proxy=$HTTPS_PROXY .
     - docker push $IMAGE_TAG
+  except:
+    - tags
 
 push-latest:
   variables:
