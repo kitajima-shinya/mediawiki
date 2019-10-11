@@ -9,9 +9,9 @@ RUN yum -y install python36
 RUN unlink /usr/bin/python
 RUN ln -s /usr/bin/python36 /usr/bin/python
 RUN systemctl enable httpd
-RUN curl -fsL https://releases.wikimedia.org/mediawiki/1.33/mediawiki-1.33.0.tar.gz  | tar xfz - -C /var/www
-RUN ln -s /var/www/mediawiki-1.33.0/ /var/www/wiki
-RUN chown -R apache:apache /var/www/mediawiki-1.33.0/
+RUN curl -fsL https://releases.wikimedia.org/mediawiki/1.33/mediawiki-1.33.1.tar.gz  | tar xfz - -C /var/www
+RUN ln -s /var/www/mediawiki-1.33.1/ /var/www/wiki
+RUN chown -R apache:apache /var/www/mediawiki-1.33.1/
 RUN sed -i 's/DocumentRoot \"\/var\/www\/html\"/DocumentRoot \"\/var\/www\"/' /etc/httpd/conf/httpd.conf
 RUN sed -i 's/Require all granted/Require all granted\n    DirectoryIndex index.html index.html.var index.php/' /etc/httpd/conf/httpd.conf
 RUN sed -i '/<Directory \"\/var\/www\">/N;s/\n/ /' /etc/httpd/conf/httpd.conf

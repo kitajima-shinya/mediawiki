@@ -1,7 +1,7 @@
 version: '3'
 services:
   mediawiki:
-    image: stratus159.stratus.flab.fujitsu.co.jp:9000/kitajima/mediawiki:1.0.0
+    image: harbor.neko.flab.fujitsu.co.jp:9000/kitajima/mediawiki:1.33.1
     container_name: wiki
     restart: always
     ports:
@@ -15,7 +15,7 @@ services:
     privileged: true
     command: /sbin/init
   database:
-    image: mariadb:10.4.5
+    image: mariadb:10.4.8
     container_name: wiki-db
     restart: always
     environment:
