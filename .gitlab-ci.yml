@@ -1,8 +1,8 @@
 # https://blog.callr.tech/building-docker-images-with-gitlab-ci-best-practices/
-image: docker:19.03.2
+image: docker:19.03.8
 
 services:
-  - name: docker:dind
+  - name: docker:19.03.8-dind
     command: ["--insecure-registry=harbor.neko.flab.fujitsu.co.jp:9000"]
 
 variables:
@@ -12,6 +12,7 @@ variables:
   IMAGE_DEV_LATEST_TAG: $CI_REGISTRY/$CI_PROJECT_PATH:dev-latest
   DOCKER_HOST: tcp://localhost:2375
   DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
   HTTP_PROXY: $http_proxy
   HTTPS_PROXY: $https_proxy
 
